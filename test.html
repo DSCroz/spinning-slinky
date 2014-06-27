@@ -4,6 +4,7 @@
 
 <style>
 
+	/* Disallow scrolling and make the window use 100% of the space*/
     body, html { overflow: hidden;
     	height:100%;
     	width:100%;
@@ -15,11 +16,9 @@
 
 <div style="height:100%; width:100%; font-family: arial;">
 
+	<!-- holds the slinky controls and instructions -->
 	<div id="controls" style="position:absolute; left:10px; top:10px; z-index:1">
-		Spin: <input class="scrollable" type="range" name="points" min="1" max="29" value="0" onchange="updateSpin(this.value)">
-		<!-- <div id="add_1">
-		</div>
-		-->
+		Spin: <input class="scrollable" type="range" name="points" min="1" max="29" value="1" onchange="updateSpin(this.value)">
 		<br>
 		Size: <input class="scrollable" type="range" name="points" min="0" max="60" value="0" onchange="updateSize(this.value)">
 		<br>
@@ -31,11 +30,9 @@
 		Or tap 2 fingers if on mobile!
 		<br><br>
 		click for the <a href="index.html">normal slinky</a> (laaaaaaaaame)
-		<br><br>
-		<!-- <div id="add_2">
-		</div> -->
 	</div>
 
+<!-- The 40 circles to be used, all pull from circle.png -->
 <img class="circle" id="circle1" src="circle.png" alt="circle1" style="position: absolute; left:0px; top:0px;">
 <img class="circle" id="circle2" src="circle.png" alt="circle2" style="position: absolute; left:0px; top:0px;">
 <img class="circle" id="circle3" src="circle.png" alt="circle3" style="position: absolute; left:0px; top:0px;">
@@ -85,29 +82,31 @@
 
 </div>
 
+<!-- scripts to animate the circles -->
 <script>
 
-// Load the add
-// loadAdds();
-
 var mouse = {x: 0, y: 0};
-var spinner = {size: 0, spin: 1, speed: 2, circles: 24};
+var spinner = {size: 0, spin: 29, speed: 2, circles: 24};
 var timer = 0;
 var pause = false;
+var MAX_CIRCLES = 40;
 
-// update the circles so we don't display extra ones at the start
+// update the circles here so we don't display extra ones at the start
 updateCircles(spinner.circles);
 
+// to keep track of the mouse position
 document.addEventListener('mousemove', function(e){ 
     mouse.x = e.clientX || e.pageX; 
     mouse.y = e.clientY || e.pageY;
 }, false);
 
+// to keep track of the touch position
 document.addEventListener('touchmove', function(e) {
 	mouse.x = e.touches[0].clientX;
 	mouse.y = e.touches[0].clientY;
 
-	// If the touch movement is not on one of the controls, prevent page scrolling (touch screens)
+	// If the touch movement is not on one of the controls, prevent page
+	// scrolling (touch screens)
 	if (!e.target.classList.contains('scrollable')) {
 		e.preventDefault();
 	} else {
@@ -115,6 +114,7 @@ document.addEventListener('touchmove', function(e) {
 	}
 }, false);
 
+// pause the slinky on mousedown
 document.addEventListener('mousedown', function(e) {
 	// Either pause the circles or unpause them (unless on a input control)
 	if (!e.target.classList.contains('scrollable')) {
@@ -122,23 +122,28 @@ document.addEventListener('mousedown', function(e) {
 	}
 }, false);
 
+// pause the slinky on 2nd finger touch
 document.addEventListener('touchstart', function(e) {
-	// Do something
 	if (e.touches[1] != null) {
 		pause = !pause;
 	}
 }, false);
 
+// Start the animation process
 setInterval(moveCircle,20);
-// To give the circles a reference for timing and radial movement
+// Give the circles a reference for timing and radial movement
 setInterval(increaseTimer,20);
 
+// circle movement behavior
 function moveCircle() {
 
+	// only move the circles if pause == false
 	if (!pause) {
 
+		// only visible circles
 		for (i = 1; i <= spinner.circles; i++) {
 
+			// The 1st circle follows the mouse position
 			if (i == 1) {
 
 				circName = "circle" + i;
@@ -151,10 +156,15 @@ function moveCircle() {
 				// make the circle revolve around the mouse at a radius of 130 px
 				x_step = x_step + Math.cos(timer * Math.PI / spinner.spin)*spinner.size;
 				y_step = y_step + Math.sin(timer * Math.PI / spinner.spin)*spinner.size;
+
+				x_step = (x_step >= 0) ? Math.ceil(x_step) : Math.floor(x_step);
+				y_step = (y_step >= 0) ? Math.ceil(y_step) : Math.floor(y_step);
+
 				myCircle.style.position = "absolute";
 				myCircle.style.left = (x_circle + x_step)+"px";
 				myCircle.style.top = (y_circle + y_step)+"px";
 
+			// The remaining circles follow each other, not the mouse
 			} else {
 				circName = "circle" + i;
 				prevCircName = "circle" + (i-1);
@@ -167,6 +177,10 @@ function moveCircle() {
 				// subtract 64 to center the circle
 				x_step = (x_prev_circle - x_circle)/(spinner.speed);
 				y_step = (y_prev_circle - y_circle)/(spinner.speed);
+
+				x_step = (x_step >= 0) ? Math.ceil(x_step) : Math.floor(x_step);
+				y_step = (y_step >= 0) ? Math.ceil(y_step) : Math.floor(y_step);
+				
 				myCircle.style.position = "absolute";
 				myCircle.style.left = (x_circle + x_step)+"px";
 				myCircle.style.top = (y_circle + y_step)+"px";
@@ -175,10 +189,12 @@ function moveCircle() {
 	}
 }
 
+// Increase the timer every 20ms
 function increaseTimer() {
 	timer += 1;
 }
 
+// Update the spinner values depending on the range inputs
 function updateSpin(val) {
 	spinner.spin = 30 - val;
 }
@@ -191,6 +207,7 @@ function updateSize(val) {
 	spinner.size = val;
 }
 
+// Hide any extra circles
 function updateCircles(val) {
 	spinner.circles = parseInt(val);
 	for (i = 1; i <= spinner.circles; i++) {
@@ -199,26 +216,12 @@ function updateCircles(val) {
 		myCircle.style.visibility="visible";
 	}
 
-	for (i = spinner.circles + 1; i <= 40; i++) {
+	for (i = spinner.circles + 1; i <= MAX_CIRCLES; i++) {
 		circName = "circle" + i;
 		myCircle = document.getElementById(circName);
 		myCircle.style.visibility="hidden";
 	}
 }
-
-function loadAdds() {
-	//add1 = document.getElementById("add_1");
-	add2 = document.getElementById("add_2");
-	if (screen.width > screen.height) {
-		//add1.display = "none";
-		add2.display = "normal";
-	} else {
-		//add1.display = "normal";
-		add2.display = "none";
-	}
-}
-
-
 
 </script>
 

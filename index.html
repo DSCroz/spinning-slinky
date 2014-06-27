@@ -4,6 +4,7 @@
 
 <style>
 
+	/* Disallow scrolling and make the window use 100% of the space*/
     body, html { overflow: hidden;
     	height:100%;
     	width:100%;
@@ -15,6 +16,7 @@
 
 <div style="height:100%; width:100%; font-family: arial;">
 
+	<!-- holds the slinky controls and instructions -->
 	<div id="controls" style="position:absolute; left:10px; top:10px; z-index:1">
 		click for the
 		<br> <a href="spinningslinky.html">SPINNING SLINKY</a>
@@ -38,6 +40,7 @@
 	</script>
 	</div>
 
+<!-- The 24 circles to be used, all pull from circle.png -->
 <img class="circle" id="circle1" src="circle.png" alt="circle1" style="position: absolute; left:0px; top:0px;">
 <img class="circle" id="circle2" src="circle.png" alt="circle2" style="position: absolute; left:0px; top:0px;">
 <img class="circle" id="circle3" src="circle.png" alt="circle3" style="position: absolute; left:0px; top:0px;">
@@ -69,49 +72,58 @@
 
 </div>
 
+<!-- scripts to animate the circles -->
 <script>
 
 var mouse = {x: 0, y: 0};
 var pause = false;
 
+// to keep track of the mouse position
 document.addEventListener('mousemove', function(e){ 
     mouse.x = e.clientX || e.pageX; 
     mouse.y = e.clientY || e.pageY 
 }, false);
 
+// to keep track of the touch position
 document.addEventListener('touchmove', function(e) {
 	mouse.x = e.touches[0].clientX;
 	mouse.y = e.touches[0].clientY;
 
-	// If the touch movement is not on one of the controls, prevent page scrolling (touch screens)
-	if (document.activeElement.parentNode == document.getElementById("controls")) {
-		return true;
-	} else {
+	// If the touch movement is not on one of the controls, prevent page
+	// scrolling (touch screens)
+	if (!e.target.classList.contains('scrollable')) {
 		e.preventDefault();
+	} else {
 		return true;
 	}
 }, false);
 
+// pause the slinky on mousedown
 document.addEventListener('mousedown', function(e) {
 	// Either pause the circles or unpause them
 	pause = !pause;
 }, false);
 
+// pause the slinky on 2nd finger touch
 document.addEventListener('touchstart', function(e) {
-	// Do something
 	if (e.touches[1] != null) {
 		pause = !pause;
 	}
 }, false);
 
-var timer = setInterval(moveCircle,20);
+// Start the animation process
+setInterval(moveCircle,20);
 
+// circle movement behavior
 function moveCircle() {
 
+	// only move the circles if pause == false
 	if (!pause) {
 
+		// only visible circles
 		for (i = 1; i <= 24; i++) {
 
+			// The 1st circle follows the mouse position
 			if (i == 1) {
 
 				circName = "circle" + i;
@@ -129,6 +141,7 @@ function moveCircle() {
 				myCircle.style.left = (x_circle + x_step)+"px";
 				myCircle.style.top = (y_circle + y_step)+"px";
 
+			// The remaining circles follow each other, not the mouse
 			} else {
 				circName = "circle" + i;
 				prevCircName = "circle" + (i-1);
