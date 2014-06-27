@@ -1,4 +1,4 @@
-spinning_slinky
+spinning-slinky
 ===============
 
 David Crozier
