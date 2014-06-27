@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+
+<html>
+
+<style>
+
+    body, html { overflow: hidden;
+    	height:100%;
+    	width:100%;
+     }
+
+</style>
+
+<body>
+
+<div style="height:100%; width:100%; font-family: arial;">
+
+	<div id="controls" style="position:absolute; left:10px; top:10px; z-index:1">
+		click for the
+		<br> <a href="spinningslinky.html">SPINNING SLINKY</a>
+		<br>
+		(with no add ooooooh)
+		<br><br>
+		Click to pause the circles! <br>
+		Or tap 2 fingers if on mobile!
+		<br><br>
+	</div>
+
+	<div id="add_1" style="position:absolute; right:10px; top:10px; z-index:1">
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+	<!-- add_1 -->
+	<ins class="adsbygoogle"
+ 	style="display:inline-block;width:728px;height:90px"
+ 	data-ad-client="ca-pub-6824307374565607"
+ 	data-ad-slot="8576272571"></ins>
+	<script>
+	(adsbygoogle = window.adsbygoogle || []).push({});
+	</script>
+	</div>
+
+<img class="circle" id="circle1" src="circle.png" alt="circle1" style="position: absolute; left:0px; top:0px;">
+<img class="circle" id="circle2" src="circle.png" alt="circle2" style="position: absolute; left:0px; top:0px;">
+<img class="circle" id="circle3" src="circle.png" alt="circle3" style="position: absolute; left:0px; top:0px;">
+<img class="circle" id="circle4" src="circle.png" alt="circle4" style="position: absolute; left:0px; top:0px;">
+<img class="circle" id="circle5" src="circle.png" alt="circle5" style="position: absolute; left:0px; top:0px;">
+<img class="circle" id="circle6" src="circle.png" alt="circle6" style="position: absolute; left:0px; top:0px;">
+
+<img class="circle" id="circle7" src="circle.png" alt="circle7" style="position: absolute; left:0px; top:0px;">
+<img class="circle" id="circle8" src="circle.png" alt="circle8" style="position: absolute; left:0px; top:0px;">
+<img class="circle" id="circle9" src="circle.png" alt="circle9" style="position: absolute; left:0px; top:0px;">
+<img class="circle" id="circle10" src="circle.png" alt="circle10" style="position: absolute; left:0px; top:0px;">
+<img class="circle" id="circle11" src="circle.png" alt="circle11" style="position: absolute; left:0px; top:0px;">
+<img class="circle" id="circle12" src="circle.png" alt="circle12" style="position: absolute; left:0px; top:0px;">
+
+<img class="circle" id="circle13" src="circle.png" alt="circle13" style="position: absolute; left:0px; top:0px;">
+<img class="circle" id="circle14" src="circle.png" alt="circle14" style="position: absolute; left:0px; top:0px;">
+<img class="circle" id="circle15" src="circle.png" alt="circle15" style="position: absolute; left:0px; top:0px;">
+<img class="circle" id="circle16" src="circle.png" alt="circle16" style="position: absolute; left:0px; top:0px;">
+<img class="circle" id="circle17" src="circle.png" alt="circle17" style="position: absolute; left:0px; top:0px;">
+<img class="circle" id="circle18" src="circle.png" alt="circle18" style="position: absolute; left:0px; top:0px;">
+
+<img class="circle" id="circle19" src="circle.png" alt="circle19" style="position: absolute; left:0px; top:0px;">
+<img class="circle" id="circle20" src="circle.png" alt="circle20" style="position: absolute; left:0px; top:0px;">
+<img class="circle" id="circle21" src="circle.png" alt="circle21" style="position: absolute; left:0px; top:0px;">
+<img class="circle" id="circle22" src="circle.png" alt="circle22" style="position: absolute; left:0px; top:0px;">
+<img class="circle" id="circle23" src="circle.png" alt="circle23" style="position: absolute; left:0px; top:0px;">
+<img class="circle" id="circle24" src="circle.png" alt="circle24" style="position: absolute; left:0px; top:0px;">
+
+
+</div>
+
+<script>
+
+var mouse = {x: 0, y: 0};
+var pause = false;
+
+document.addEventListener('mousemove', function(e){ 
+    mouse.x = e.clientX || e.pageX; 
+    mouse.y = e.clientY || e.pageY 
+}, false);
+
+document.addEventListener('touchmove', function(e) {
+	mouse.x = e.touches[0].clientX;
+	mouse.y = e.touches[0].clientY;
+
+	// If the touch movement is not on one of the controls, prevent page scrolling (touch screens)
+	if (document.activeElement.parentNode == document.getElementById("controls")) {
+		return true;
+	} else {
+		e.preventDefault();
+		return true;
+	}
+}, false);
+
+document.addEventListener('mousedown', function(e) {
+	// Either pause the circles or unpause them
+	pause = !pause;
+}, false);
+
+document.addEventListener('touchstart', function(e) {
+	// Do something
+	if (e.touches[1] != null) {
+		pause = !pause;
+	}
+}, false);
+
+var timer = setInterval(moveCircle,20);
+
+function moveCircle() {
+
+	if (!pause) {
+
+		for (i = 1; i <= 24; i++) {
+
+			if (i == 1) {
+
+				circName = "circle" + i;
+				myCircle = document.getElementById(circName);
+				x_circle = parseInt(myCircle.style.left);
+				y_circle = parseInt(myCircle.style.top);
+				// subtract 64 to center the circle
+				x_step = (mouse.x - 64 - x_circle)/ (6+i);
+				y_step = (mouse.y - 64 - y_circle)/(6+i);
+
+				x_step = (x_step >= 0) ? Math.ceil(x_step) : Math.floor(x_step);
+				y_step = (y_step >= 0) ? Math.ceil(y_step) : Math.floor(y_step);
+
+				myCircle.style.position = "absolute";
+				myCircle.style.left = (x_circle + x_step)+"px";
+				myCircle.style.top = (y_circle + y_step)+"px";
+
+			} else {
+				circName = "circle" + i;
+				prevCircName = "circle" + (i-1);
+				myCircle = document.getElementById(circName);
+				x_circle = parseInt(myCircle.style.left);
+				y_circle = parseInt(myCircle.style.top);
+				prevCirc = document.getElementById(prevCircName);
+				x_prev_circle = parseInt(prevCirc.style.left);
+				y_prev_circle = parseInt(prevCirc.style.top);
+				// subtract 64 to center the circle
+				x_step = (x_prev_circle - x_circle)/(2);
+				y_step = (y_prev_circle - y_circle)/(2);
+
+				x_step = (x_step >= 0) ? Math.ceil(x_step) : Math.floor(x_step);
+				y_step = (y_step >= 0) ? Math.ceil(y_step) : Math.floor(y_step);
+				
+				myCircle.style.position = "absolute";
+				myCircle.style.left = (x_circle + x_step)+"px";
+				myCircle.style.top = (y_circle + y_step)+"px";
+			}
+		}
+	}
+}
+
+</script>
+
+<!-- Google Analytics -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-52249670-1', 'spinningslinky.com');
+  ga('send', 'pageview');
+
+</script>
+
+</body>
+</html>
