@@ -77,6 +77,8 @@
 
 var mouse = {x: 0, y: 0};
 var pause = false;
+var pixelated = true;
+var MAX_CIRCLES = 24;
 
 // to keep track of the mouse position
 document.addEventListener('mousemove', function(e){ 
@@ -163,7 +165,45 @@ function moveCircle() {
 				myCircle.style.top = (y_circle + y_step)+"px";
 			}
 		}
+
+		myCircleStart = document.getElementById("circle1");
+		myCircleLastName = "circle" + MAX_CIRCLES;
+		myCircleLast = document.getElementById(myCircleLastName);
+
+		if (myCircleStart.style.left == myCircleLast.style.left && 
+			myCircleStart.style.top == myCircleLast.style.top) {
+			unPixelate();
+		} else if (!pixelated){
+			updateCircles();
+		}
 	}
+}
+
+// Hide any extra circles
+function updateCircles() {
+	for (i = 1; i <= MAX_CIRCLES; i++) {
+		circName = "circle" + i;
+		myCircle = document.getElementById(circName);
+		myCircle.style.visibility="visible";
+	}
+
+	for (i = MAX_CIRCLES + 1; i <= MAX_CIRCLES; i++) {
+		circName = "circle" + i;
+		myCircle = document.getElementById(circName);
+		myCircle.style.visibility="hidden";
+	}
+
+	pixelated = true;
+}
+
+function unPixelate() {
+	for (i = 2; i <= MAX_CIRCLES; i++) {
+		circName = "circle" + i;
+		myCircle = document.getElementById(circName);
+		myCircle.style.visibility="hidden";
+	}
+
+	pixelated = false;
 }
 
 </script>
